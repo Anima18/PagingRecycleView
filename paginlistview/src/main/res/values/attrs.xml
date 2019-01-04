@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="PagingRecycleView">
+        <attr name="lagoutid" format="reference" />
+        <attr name="pagesize" format="integer"/>
+    </declare-styleable>
+</resources>
