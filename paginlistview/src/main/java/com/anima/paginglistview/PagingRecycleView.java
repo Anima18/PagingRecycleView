@@ -50,10 +50,14 @@ public class PagingRecycleView<T> extends FrameLayout {
         public void onResult(@NonNull List<T> data) {
             refreshLayout.setRefreshing(false);
             setPageable(data);
-            mRefreshAdapter.addDatas(data);
-            mRefreshAdapter.setNetworkState(PagingStatus.LOADED);
-            beginNo += data.size();
-            page++;
+            if(data.size() > 0) {
+                mRefreshAdapter.addDatas(data);
+                mRefreshAdapter.setNetworkState(PagingStatus.LOADED);
+                beginNo += data.size();
+                page++;
+            }else {
+                mRefreshAdapter.setNetworkState(PagingStatus.EMPTY);
+            }
         }
 
         @Override

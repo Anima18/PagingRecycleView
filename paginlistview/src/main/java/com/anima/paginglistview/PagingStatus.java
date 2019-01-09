@@ -9,6 +9,7 @@ public class PagingStatus {
     public String msg;
     public final static PagingStatus LOADED = new PagingStatus(Status.SUCCESS, null);
     public final static PagingStatus LOGING = new PagingStatus(Status.RUNNING, null);
+    public final static PagingStatus EMPTY = new PagingStatus(Status.EMPTY, null);
 
     public PagingStatus(Status status, String msg) {
         this.status = status;
@@ -22,6 +23,7 @@ public class PagingStatus {
     public enum Status {
         RUNNING,
         SUCCESS,
-        FAILED
+        FAILED,
+        EMPTY
     }
 }

@@ -31,7 +31,7 @@ public class NetworkStateItemViewHolder extends  RecyclerView.ViewHolder {
 
     public void bindTo(PagingStatus pagingStatus, Boolean isLoadMore, View.OnClickListener retryCallback) {
         if(isLoadMore) {
-            LinearLayout.LayoutParams linearParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 400);
+            LinearLayout.LayoutParams linearParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300);
             layout.setLayoutParams(linearParams);
         }else {
             LinearLayout.LayoutParams linearParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -39,6 +39,7 @@ public class NetworkStateItemViewHolder extends  RecyclerView.ViewHolder {
         }
         progressBar.setVisibility(toVisibility(pagingStatus.status == PagingStatus.Status.RUNNING));
         retryButton.setVisibility(toVisibility(pagingStatus.status == PagingStatus.Status.FAILED));
+        pagingStatus.msg = pagingStatus.status == PagingStatus.Status.EMPTY ? "没有数据" : pagingStatus.msg;
         errorMessage.setVisibility(toVisibility(pagingStatus.msg != null));
         errorMessage.setText(pagingStatus.msg);
 
