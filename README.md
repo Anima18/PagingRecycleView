@@ -13,7 +13,7 @@ compile 'com.anima:PagingRecycleView:1.0.1'
 ```
 
 ## 效果
-![image](https://raw.githubusercontent.com/Anima18/PagingRecycleView/master/images/image.gif)
+![image](https://raw.githubusercontent.com/Anima18/PagingRecycleView/master/images/image1.gif)
 
 ## 示例
 ##### 1. 定义PagingRecycleView  
