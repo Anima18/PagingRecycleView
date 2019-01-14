@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         pagingListView.bindDataSource(new PagingRecycleView.OnDataSource<Item>() {
             @Override
             public void loadData(int beginNo, int endNo, int page, final PagingRecycleView.LoadCallback<Item> callback) {
-               String url = "https://api.github.com/users/anima18/followers?page="+page;
+               String url = "https://api.github.com/users/yeasy/followers?page="+page;
 
                 NetworkRequestImpl.create(MainActivity.this)
                         .setUrl(url)
