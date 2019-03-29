@@ -1,6 +1,8 @@
 package com.anima.paginglistviewtest;
 
+import android.graphics.Outline;
 import android.view.View;
+import android.view.ViewOutlineProvider;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -42,6 +44,7 @@ public class ItemViewHolder extends PagingRecycleItemViewHolder<Item> {
 
     @Override
     public View backgroundView() {
+
         return backgroundView;
     }
 }

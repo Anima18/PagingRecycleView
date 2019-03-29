@@ -200,7 +200,8 @@ public class PagingRecycleView<T> extends FrameLayout implements RecyclerItemTou
 
             // showing snack bar with Undo option
             final boolean[] isDelete = {true};
-            View rootView = ((Activity)context).getWindow().getDecorView().getRootView();
+
+            View rootView = ((Activity)context).findViewById(android.R.id.content);
             Snackbar snackbar = Snackbar.make(rootView, "删除这条记录", Snackbar.LENGTH_LONG);
             snackbar.setAction("撤销", new View.OnClickListener() {
                 @Override
