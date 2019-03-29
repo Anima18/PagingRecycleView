@@ -1,16 +1,22 @@
 package com.anima.paginglistview;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
+
+import com.anima.paginglistview.viewholder.PagingRecycleItemViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +24,7 @@ import java.util.List;
 /**
  * Created by jianjianhong on 18-12-25
  */
-public class PagingRecycleView<T> extends FrameLayout {
+public class PagingRecycleView<T> extends FrameLayout implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
     private Context context;
     private RecyclerView recycleView;
@@ -44,6 +50,8 @@ public class PagingRecycleView<T> extends FrameLayout {
     private SwipeRefreshLayout.OnRefreshListener onRefreshListener;
 
     private OnDataSource<T> dataSource;
+
+    private OnDataDelete<T> dataDelete;
 
     private LoadCallback<T> callback = new LoadCallback<T>() {
         @Override
@@ -104,18 +112,21 @@ public class PagingRecycleView<T> extends FrameLayout {
         refreshLayout = root.findViewById(R.id.view_swipe_refresh_layout);
         recycleView = root.findViewById(R.id.view_swipe_refresh_recycleview);
         recycleView.setLayoutManager(new LinearLayoutManager(context));
+
     }
 
     private void initEvent() {
         onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                refreshLayout.setRefreshing(false);
                 beginNo = 1;
                 page = 1;
                 pageable = true;
                 mRefreshAdapter.setData(new ArrayList<T>());
-
-                requestData();
+                if(dataSource != null) {
+                    requestData();
+                }
             }
         };
         refreshLayout.setOnRefreshListener(onRefreshListener);
@@ -170,8 +181,63 @@ public class PagingRecycleView<T> extends FrameLayout {
         onRefreshListener.onRefresh();
     }
 
+    public void setDataDelete(OnDataDelete dataDelete) {
+        this.dataDelete = dataDelete;
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recycleView);
+    }
+
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        if (viewHolder instanceof PagingRecycleItemViewHolder) {
+            // backup of removed item for undo purpose
+
+            final T deletedItem = mRefreshAdapter.getData().get(viewHolder.getAdapterPosition());
+            final int deletedIndex = viewHolder.getAdapterPosition();
+
+            // remove the item from recycler view
+            mRefreshAdapter.removeItem(viewHolder.getAdapterPosition());
+
+            // showing snack bar with Undo option
+            final boolean[] isDelete = {true};
+            View rootView = ((Activity)context).getWindow().getDecorView().getRootView();
+            Snackbar snackbar = Snackbar.make(rootView, "删除这条记录", Snackbar.LENGTH_LONG);
+            snackbar.setAction("撤销", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // undo is selected, restore the deleted item
+                    isDelete[0] = false;
+                    insertData(deletedItem, deletedIndex);
+                }
+            });
+            snackbar.setActionTextColor(context.getResources().getColor(R.color.message_default_action));
+            snackbar.setCallback(new Snackbar.Callback() {
+                @Override
+                public void onDismissed(Snackbar snackbar, int event) {
+                    super.onDismissed(snackbar, event);
+                    if(isDelete[0]) {
+                      dataDelete.deleteData(deletedItem, deletedIndex);
+                    }
+                }
+                @Override
+                public void onShown(Snackbar snackbar) {
+                    super.onShown(snackbar);
+                }
+            });
+            snackbar.show();
+        }
+    }
+
+    public void insertData(T t, int position) {
+        mRefreshAdapter.restoreItem(t, position);
+    }
+
     public interface OnDataSource<T> {
         void loadData(int beginNo, int endNo, int page, LoadCallback<T> callback);
+    }
+
+    public interface OnDataDelete<T> {
+        void deleteData(T t, int position);
     }
 
 

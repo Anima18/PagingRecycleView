@@ -3,6 +3,7 @@ package com.anima.paginglistviewtest;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Toast;
 
 import com.anima.paginglistview.PagingRecycleAdapter;
 import com.anima.paginglistview.PagingRecycleView;
@@ -14,7 +15,7 @@ import com.ut.requsetmanager.request.NetworkRequestImpl;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +51,18 @@ public class MainActivity extends AppCompatActivity {
                         });
             }
         });
+
+        pagingListView.setDataDelete(new PagingRecycleView.OnDataDelete<Item>() {
+            @Override
+            public void deleteData(Item o, int position) {
+                Toast.makeText(MainActivity.this, "delete "+o.getLogin()+ " success", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    @Override
+    public void onClick(View view) {
 
     }
 }

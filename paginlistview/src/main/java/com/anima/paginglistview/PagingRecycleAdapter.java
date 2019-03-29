@@ -120,6 +120,24 @@ public class PagingRecycleAdapter<T> extends RecyclerView.Adapter {
         this.notifyDataSetChanged();
     }
 
+    public List<T> getData() {
+        return list;
+    }
+
+    public void removeItem(int position) {
+        list.remove(position);
+        // notify the item removed by position
+        // to perform recycler view delete animations
+        // NOTE: don't call notifyDataSetChanged()
+        notifyItemRemoved(position);
+    }
+
+    public void restoreItem(T item, int position) {
+        list.add(position, item);
+        // notify item added by position
+        notifyItemInserted(position);
+    }
+
     public void setItemViewHolderCreator(OnItemViewHolderCreator itemViewHolderCreator) {
         this.itemViewHolderCreator = itemViewHolderCreator;
     }

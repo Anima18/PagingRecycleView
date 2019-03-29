@@ -13,4 +13,8 @@ abstract public class PagingRecycleItemViewHolder<T> extends RecyclerView.ViewHo
     }
 
     public abstract void bindto(@NonNull T data);
+
+    public abstract View itemView();
+
+    public abstract View backgroundView();
 }
